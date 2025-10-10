@@ -1,0 +1,62 @@
+Front-End : (Presentation Layer) 
+			 Data Visualization --> Dashboard / Reports 
+			 Interactivity & User Experience
+			 DAX (Data Analysis Expressions) --> Interview ****/ Formula 
+			 Deployment & Sharing
+			 
+		 
+
+Back-End :(Data Processing & Transformation)  -- Raw Datas 
+		PQE --> Power Query Editor 
+			 Data Connectivity & Integration
+			 Power Query (ETL - Extract, Transform, Load) -- Interview Question :
+			 Performance Optimization
+			 Security & Governance
+
+ Data Visualization :
+ ==================
+Creating dashboards and reports with charts, tables, slicers, and maps.
+Using built-in visuals like bar charts, pie charts, line graphs, and custom visuals from AppSource.
+Implementing KPIs, scorecards, and conditional formatting for better insights.
+
+Interactivity & User Experience
+===============================	
+Adding filters, slicers, and drill-through options.
+Enabling tooltips and dynamic interactions between visuals.
+Implementing bookmarks and navigation buttons for guided analytics.
+
+DAX (Data Analysis Expressions)
+===============================
+Writing DAX formulas for calculated columns, measures, and aggregations.
+Creating time intelligence functions (YTD, QTD, MTD).
+Implementing row-level security (RLS) to restrict data access.
+
+Deployment & Sharing
+=====================
+Publishing reports to Power BI Service and embedding in applications.
+Sharing dashboards with stakeholders and setting up scheduled refresh.
+Exporting reports to PDF, PowerPoint, or Excel as needed.
+
+---------------------------------------------------------------------
+Data Connectivity & Integration
+===============================
+Connecting to various sources: SQL Server, Excel, APIs, SharePoint, Cloud Databases (Azure, AWS).
+Using DirectQuery or Import Mode based on performance needs.
+
+Power Query (ETL - Extract, Transform, Load)
+============================================
+Cleaning and transforming data (removing duplicates, merging queries, handling null values).
+Creating custom columns and calculated tables using M language.
+Unpivoting columns, splitting data, and merging datasets.
+
+Performance Optimization
+========================
+Implementing data modeling best practices (Star Schema, Fact & Dimension tables).
+Using aggregations and indexing to improve performance.
+Reducing dataset size by optimizing queries and using Power BI Aggregations.
+
+Security & Governance
+=====================
+Setting up Row-Level Security (RLS) for access control.
+Defining User Roles and Permissions in Power BI Service.
+Configuring data refresh schedules to keep reports updated.
