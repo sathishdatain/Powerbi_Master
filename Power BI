@@ -1,0 +1,83 @@
+Power BI:
+========
+		🔥Power BI is a business intelligence (BI - Tool) --> 
+		🔥Data visualization tool 
+		🔥Developed by Microsoft
+		
+Why Are We Using Power BI
+=========================
+
+ 🔹Data Visualization – Turns complex data into easy-to-understand dashboards and reports.
+ 🔹Real-time Insights – Monitors business performance with live data updates.
+ 🔹Data Integration – Connects to multiple data sources (Excel, SQL Server, cloud services, APIs, etc.).
+ 🔹Ease of Use – User-friendly interface with drag-and-drop functionality.
+ 🔹Cost-Effective – Offers a free version (Power BI Desktop) and  ans.
+ 🔹Cloud-Based & Secure – Allows access from anywhere while maintaining data security.
+
+Power BI Product: MS 
+================
+
+	📊Power BI Desktop -- free
+	📊Power BI Service
+	📊Power BI Mobile
+	📊Power BI Report Server
+	📊Power BI Gateway
+	
+	
+	
+	
+Power BI Desktop
+----------------
+		✅Free Windows application for creating reports & dashboards.
+		✅Used by analysts to design and develop reports.
+		
+Power BI Service
+----------------
+		✅Cloud-based version for sharing reports & collaborating.
+		✅Used by teams to view, share, and interact with reports.
+
+Power BI Mobile
+---------------
+		✅Mobile app for accessing reports on the go
+		✅Used by executives and managers for real-time insights.
+
+Power BI Report Server
+----------------------
+		✅On-premises solution for organizations needing local data storage.
+		✅Used by companies with strict data security requirements.
+
+Power BI Gateway
+----------------
+		✅Bridges on-premises data sources with Power BI Service.
+		✅Used to refresh and sync cloud-based reports with local databases.
+		
+		
+Uses Power BI
+============
+Business Analysts – For data analysis & reporting.
+Data Professionals – For transforming and visualizing complex datasets.
+Executives & Managers – For tracking KPIs and making informed decisions.
+Developers – For embedding Power BI into applications.
+
+
+
+KPIS (Key Performance Indicator)
+
+📊 1. Strategic KPIs
+	Measure long-term business goals.
+	Example: Revenue Growth Rate, Market Share, Customer Satisfaction Score (CSAT).
+📉 2. Operational KPIs
+	Track daily or weekly business processes.
+	Example: Production Efficiency, Inventory Turnover, Customer Response Time.
+📌 3. Leading vs. Lagging KPIs
+	Leading KPIs – Predict future performance (e.g Sales Pipeline Value).
+	Lagging KPIs – Measure past performance (e.g  Annual Revenue).
+
+		Advantages of Power BI:
+		======================
+		
+		Easy Data Connectivity ( Excel, SQL Server, SharePoint, Google Analytics, Azure, etc.)
+		Advanced Visualizations (wide range of charts, graphs, maps, and custom visuals for better data storytelling.)
+		Self-Service BI ( can analyze and explore data without needing extensive technical skills)
+		Cost-Effective Solution ()
+		Integration with Microsoft Tools (Works  withExcel Teams, SharePoint, and Azure.)
