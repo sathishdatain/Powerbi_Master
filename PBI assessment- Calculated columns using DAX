@@ -1,0 +1,204 @@
+
+--- Calculated columns using DAX-----
+
+1️ In the Calendar table — “Weekend” column
+-------------------------------------------
+Show "Y" if the date is a Saturday or Sunday, otherwise "N".
+
+DAX:
+Weekend =
+IF(
+    WEEKDAY(Calendar[Date], 2) > 5,   -- 2 = Monday as start of week (Sat=6, Sun=7)
+    "Y",
+    "N"
+)
+
+Explanation:
+WEEKDAY(..., 2) returns 1 for Monday, 7 for Sunday.
+So, >5 means weekend days (Saturday or Sunday).
+
+2️ In the Calendar table — “End of Month” column
+---------------------------------------------------
+Show the last date of the month for each row.
+
+DAX:
+End of Month = EOMONTH(Calendar[Date], 0)
+
+Explanation:
+EOMONTH(date, 0) returns the last day of the same month.
+
+3️ In the Customers table — “Current Age” column
+------------------------------------------------
+Calculate customer age from their birthdate to today’s date.
+
+DAX:
+Current Age = DATEDIFF(Customers[birthdate], TODAY(), YEAR)
+
+Explanation:
+DATEDIFF measures the difference between two dates — in years here.
+
+4️ In the Customers table — “Priority” column
+---------------------------------------------
+Mark customers as "High" if they own homes and have a Golden membership, otherwise "Standard".
+
+DAX:
+Priority =
+IF(
+    Customers[home_owner] = "Y" && Customers[membership_card] = "Golden",
+    "High",
+    "Standard"
+)
+
+Explanation:
+Uses logical AND (&&) to test both conditions at once.
+
+5️ In the Customers table — “Short_Country” column
+------------------------------------------------
+Extract the first 3 letters of the country name, in uppercase.
+
+DAX:
+Short_Country = UPPER(LEFT(Customers[customer_country], 3))
+
+Explanation:
+LEFT(text, 3) takes the first 3 letters.
+UPPER() converts to uppercase.
+
+6️ In the Customers table — “House Number” column
+------------------------------------------------
+Extract all characters before the first space in customer_address.
+
+DAX:
+House Number =
+LEFT(
+    Customers[customer_address],
+    SEARCH(" ", Customers[customer_address], 1) - 1
+)
+
+Explanation:
+SEARCH(" ", …) finds the first space in the address,
+LEFT(..., position-1) gives everything before it.
+
+7️ In the Products table — “Price_Tier” column
+---------------------------------------------
+Classify product retail price into “High”, “Mid”, or “Low”.
+
+DAX:
+Price_Tier =
+IF(
+    Products[product_retail_price] > 3, "High",
+    IF(Products[product_retail_price] > 1, "Mid", "Low")
+)
+
+Explanation:
+Nested IF() creates 3 price categories.
+
+8️ In the Stores table — “Years_Since_Remodel” column
+----------------------------------------------------
+Find how many years have passed since the last remodel date.
+
+DAX:
+Years_Since_Remodel = DATEDIFF(Stores[last_remodel_date], TODAY(), YEAR)
+
+Explanation:
+Calculates the time gap (in years) between the last remodel and now.
+
+
+
+Quantity Sold = SUM(Transaction_Data[quantity])
+
+Quantity Returned = SUM(Returns_Data[quantity])
+
+Total Transactions = COUNTROWS(Transaction_Data)
+
+Total Returns = COUNTROWS(Returns_Data)
+
+Return Rate = DIVIDE([Quantity Returned], [Quantity Sold], 0)
+
+---Count transactions that occurred on Saturday or Sunday.
+Weekend Transactions =
+CALCULATE(
+    [Total Transactions],
+    FILTER(
+        Calendar,
+        Calendar[Weekend] = "Y"
+    )
+)
+
+% Weekend Transactions = DIVIDE([Weekend Transactions], [Total Transactions], 0)
+
+---grand total of transactions
+All Transactions = CALCULATE([Total Transactions], ALL(Transaction_Data))
+
+---grand total of returns
+All Returns = CALCULATE([Total Returns], ALL(Returns_Data))
+
+---SUMX() iterates row by row through the transaction table and multiplies the quantity by each product’s retail price
+Total Revenue =
+SUMX(
+    Transaction_Data,
+    Transaction_Data[quantity] * RELATED(Products[product_retail_price])
+)
+
+---
+Total Cost =
+SUMX(
+    Transaction_Data,
+    Transaction_Data[quantity] * RELATED(Products[product_cost])
+)
+
+---Profit = Revenue − Cost.
+Total Profit = [Total Revenue] - [Total Cost]
+
+
+Profit Margin = DIVIDE([Total Profit], [Total Revenue], 0)
+
+---Counts distinct product names
+Unique Products =
+DISTINCTCOUNT(Products[product_name])
+
+---TOTALYTD() accumulates revenue from the start of the year to the current date.
+YTD Revenue =
+TOTALYTD(
+    [Total Revenue],
+    Calendar[Date]
+)
+
+---Calculates total revenue for the last 60 days relative to each date
+60-Day Revenue =
+CALCULATE(
+    [Total Revenue],
+    DATESINPERIOD(Calendar[Date], MAX(Calendar[Date]), -60, DAY)
+)
+
+------DATEADD() moves the date filter back one month.
+Last Month Transactions =
+CALCULATE(
+    [Total Transactions],
+    DATEADD(Calendar[Date], -1, MONTH)
+)
+
+Last Month Revenue =
+CALCULATE(
+    [Total Revenue],
+    DATEADD(Calendar[Date], -1, MONTH)
+)
+
+Last Month Profit =
+CALCULATE(
+    [Total Profit],
+    DATEADD(Calendar[Date], -1, MONTH)
+)
+
+Last Month Returns =
+CALCULATE(
+    [Total Returns],
+    DATEADD(Calendar[Date], -1, MONTH)
+)
+
+
+---revenue from the previous month
+---* 1.05 → applies a 5% increase to set a new target.
+
+Revenue Target = [Last Month Revenue] * 1.05
+
+
