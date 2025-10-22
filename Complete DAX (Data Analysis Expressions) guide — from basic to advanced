@@ -1,0 +1,160 @@
+DAX: From Basic → Advanced
+🟢 PART 1: BASICS
+1️⃣ What is DAX?
+
+DAX = Data Analysis Expressions, a formula language used in Power BI, Power Pivot, and SSAS to create measures, calculated columns, and calculated tables.
+
+2️⃣ Basic Types of DAX Expressions
+
+| Type                  | Purpose                          | Example                                                  |
+| --------------------- | -------------------------------- | -------------------------------------------------------- |
+| **Calculated Column** | Row-by-row calculation           | `Sales[Profit] = Sales[Revenue] - Sales[Cost]`           |
+| **Measure**           | Aggregation (depends on filters) | `Total Sales = SUM(Sales[Revenue])`                      |
+| **Calculated Table**  | Create new table using logic     | `TopProducts = FILTER(Products, Products[Sales] > 5000)` |
+
+3️⃣ Common Aggregate Functions
+
+| Function          | Description        | Example                                               |
+| ----------------- | ------------------ | ----------------------------------------------------- |
+| `SUM()`           | Adds up values     | `Total Revenue = SUM(Sales[Revenue])`                 |
+| `AVERAGE()`       | Average            | `Avg Price = AVERAGE(Products[Price])`                |
+| `COUNT()`         | Counts rows        | `Transaction Count = COUNT(Sales[OrderID])`           |
+| `DISTINCTCOUNT()` | Counts unique      | `Unique Customers = DISTINCTCOUNT(Sales[CustomerID])` |
+| `MIN()` / `MAX()` | Smallest / Largest | `Min Price = MIN(Products[Price])`                    |
+
+4️⃣ Basic Filter Functions
+
+| Function      | Description                                  | Example                                                                        |
+| ------------- | -------------------------------------------- | ------------------------------------------------------------------------------ |
+| `CALCULATE()` | Changes filter context                       | `Sales 2024 = CALCULATE(SUM(Sales[Revenue]), YEAR(Sales[Date]) = 2024)`        |
+| `FILTER()`    | Returns a filtered table                     | `High Sales = FILTER(Sales, Sales[Revenue] > 1000)`                            |
+| `ALL()`       | Ignores filters                              | `Total Revenue (All) = CALCULATE(SUM(Sales[Revenue]), ALL(Sales))`             |
+| `ALLEXCEPT()` | Removes all filters except specified columns | `Brand Total = CALCULATE(SUM(Sales[Revenue]), ALLEXCEPT(Sales, Sales[Brand]))` |
+
+🟡 PART 2: INTERMEDIATE LEVEL
+5️⃣ Context in DAX
+
+Row Context → applies to each row (e.g., calculated column)
+Filter Context → applies to visuals/measures (e.g., slicer, filter)
+Context Transition → when CALCULATE() turns row context into filter context
+
+Example:
+Profit Margin = DIVIDE(SUM(Sales[Profit]), SUM(Sales[Revenue]))
+→ Uses filter context (depends on product, date, etc.)
+
+6️⃣ Iterator Functions (X Functions)
+
+| Function            | Description                | Example                                                       |
+| ------------------- | -------------------------- | ------------------------------------------------------------- |
+| `SUMX()`            | Row-by-row sum             | `Total Revenue = SUMX(Sales, Sales[Quantity] * Sales[Price])` |
+| `AVERAGEX()`        | Row-by-row average         | `Avg Order Value = AVERAGEX(Sales, Sales[Revenue])`           |
+| `COUNTX()`          | Counts based on expression | `Product Count = COUNTX(Products, Products[ProductID])`       |
+| `MINX()` / `MAXX()` | Row-by-row min/max         | `Lowest Profit = MINX(Sales, Sales[Profit])`                  |
+
+7️⃣ Time Intelligence Functions
+
+| Function               | Description               | Example                                                                        |
+| ---------------------- | ------------------------- | ------------------------------------------------------------------------------ |
+| `SAMEPERIODLASTYEAR()` | Compare with last year    | `LY Revenue = CALCULATE([Total Revenue], SAMEPERIODLASTYEAR(Calendar[Date]))`  |
+| `DATEADD()`            | Move forward/back in time | `Revenue -1M = CALCULATE([Total Revenue], DATEADD(Calendar[Date], -1, MONTH))` |
+| `TOTALYTD()`           | Year-to-date              | `YTD Revenue = TOTALYTD([Total Revenue], Calendar[Date])`                      |
+| `DATESYTD()`           | Returns all dates YTD     | `CALCULATE(SUM(Sales[Revenue]), DATESYTD(Calendar[Date]))`                     |
+
+8️⃣ Conditional & Logical Functions
+
+| Function         | Description             | Example                                                                      |
+| ---------------- | ----------------------- | ---------------------------------------------------------------------------- |
+| `IF()`           | Logical check           | `IF([Profit] > 0, "Profit", "Loss")`                                         |
+| `SWITCH()`       | Multiple IFs simplified | `SWITCH(TRUE(), [Profit] > 0, "Positive", [Profit] < 0, "Negative", "Zero")` |
+| `AND()` / `OR()` | Logical conditions      | `IF([Profit] > 1000 && [Margin] > 0.2, "High", "Low")`                       |
+
+🔵 PART 3: ADVANCED DAX
+9️⃣ Dynamic Measures
+
+Example: show dynamic metric based on slicer
+Selected Metric =
+SWITCH(
+    SELECTEDVALUE(Metrics[MetricName]),
+    "Revenue", [Total Revenue],
+    "Profit", [Total Profit],
+    "Margin", [Profit Margin]
+)
+
+🔟 Cumulative or Running Totals
+
+Running Total =
+CALCULATE(
+    [Total Revenue],
+    FILTER(
+        ALLSELECTED(Calendar),
+        Calendar[Date] <= MAX(Calendar[Date])
+    )
+)
+
+11️⃣ Ranking
+Rank by Revenue =
+RANKX(
+    ALL(Products[ProductName]),
+    [Total Revenue],
+    ,
+    DESC
+)
+
+12️⃣ Advanced Time Intelligence
+
+Rolling 60-Day Revenue:
+Rolling 60-Day Revenue =
+CALCULATE(
+    [Total Revenue],
+    DATESINPERIOD(Calendar[Date], MAX(Calendar[Date]), -60, DAY)
+)
+
+13️⃣ Dynamic Titles
+
+Dynamic Title =
+"Sales Overview for " & SELECTEDVALUE(Calendar[Year])
+
+14️⃣ KPI Goals / Targets
+
+Revenue Target =
+CALCULATE(
+    [Last Month Revenue] * 1.10
+)
+
+15️⃣ Advanced CALCULATE Patterns
+
+Ignore Filters Except One:
+Brand Revenue =
+CALCULATE(
+    [Total Revenue],
+    ALLEXCEPT(Sales, Sales[Brand])
+)
+
+Apply Multiple Filters:
+High Margin Sales =
+CALCULATE(
+    [Total Revenue],
+    Sales[Profit Margin] > 0.25,
+    Sales[Region] = "West"
+)
+
+🔴 PART 4: PERFORMANCE OPTIMIZATION
+
+Avoid using CALCULATE(FILTER()) unnecessarily.
+Prefer measures over calculated columns for aggregation.
+Use variables (VAR) for clean, efficient DAX:
+
+Profit Margin =
+VAR TotalRevenue = [Total Revenue]
+VAR TotalProfit = [Total Profit]
+RETURN DIVIDE(TotalProfit, TotalRevenue)
+
+🧩 BONUS: PRACTICAL DAX PROJECT FLOW
+
+| Step | DAX Concept       | Example                                                     |
+| ---- | ----------------- | ----------------------------------------------------------- |
+| 1    | Aggregation       | `[Total Revenue] = SUM(Sales[Revenue])`                     |
+| 2    | Relationships     | Use LOOKUPVALUE / RELATED                                   |
+| 3    | Time Intelligence | `[YTD Revenue] = TOTALYTD([Total Revenue], Calendar[Date])` |
+| 4    | KPI               | `[Profit Margin] = DIVIDE([Profit], [Revenue])`             |
+| 5    | Forecast / Target | `[Revenue Target] = [Last Month Revenue] * 1.10`            |
