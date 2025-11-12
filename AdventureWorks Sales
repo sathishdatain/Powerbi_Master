@@ -18,10 +18,11 @@ Objective: Show company-wide sales performance.
 Steps:
 Add a Card Visual → Sales_data[Sales Amount] → Total Sales.
 Add a Card Visual → Sales_data[Order Quantity] → Total Orders.
-Add a Line Chart:
 
+Add a Line Chart:
 Axis → Date_data[Full Date]
 Values → Sales_data[Sales Amount]
+
 This shows daily/monthly sales trend.
 
 Add a Slicer → Date_data[Year] and Date_data[Month] to filter.
