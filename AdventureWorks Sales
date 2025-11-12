@@ -92,3 +92,43 @@ Reseller (Reseller_data)
 
 This allows managers to slice dashboards quickly.
 📌 Outcome: Fully interactive dashboard for analysis.
+
+----------------------------------------------------------------------------------------------------------------------------------------
+Dashboard Design
+Page 1: Sales Overview - Executive Summary
+KPIs: Total Sales, Profit, Profit Margin %, Order Count
+
+Charts:
+Sales & Profit Trend (Line chart by Month)
+Sales by Region (Map or Bar Chart)
+Top 5 Products by Revenue (Bar Chart)
+Sales by Channel (Pie/Donut Chart)
+
+Page 2: Product Performance
+Table or Matrix:
+Product Category, Subcategory, Total Sales, Profit, Margin
+Visuals:
+Clustered bar: “Sales by Product Category”
+Scatter: “Profit vs Sales by Product”
+
+Page 3: Regional Analysis
+Map: Sales by Country/City
+Column chart: Sales by Region and Year
+KPI Card: Top-performing region
+
+Page 4: Customer Insights
+Table: Top 10 Customers by Revenue
+Funnel: Sales pipeline by stage (if available)
+KPI: Repeat Customers (%)
+
+| Metric           | Formula (DAX)                           | Description              |
+| ---------------- | --------------------------------------- | ------------------------ |
+| Total Sales      | `SUM(Sales[SalesAmount])`               | Total revenue            |
+| Total Cost       | `SUM(Sales[TotalProductCost])`          | Total cost of goods sold |
+| Total Profit     | `[Total Sales] - [Total Cost]`          | Profit                   |
+| Profit Margin %  | `DIVIDE([Total Profit], [Total Sales])` | Profit percentage        |
+| Order Count      | `COUNTROWS(Sales)`                      | Number of orders         |
+| Avg. Order Value | `DIVIDE([Total Sales], [Order Count])`  | Average order revenue    |
+
+
+
