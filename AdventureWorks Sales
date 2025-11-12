@@ -20,6 +20,10 @@ In Customer_Data and Reseller_Data, the first row often has:
 💡 Meaning:
 -1 is a placeholder (dummy key) used when a sale record in the fact table (Sales_Data) doesn’t have a matching customer or reseller.
 Instead of leaving it blank or NULL, data engineers use -1 to maintain referential integrity between fact and dimension tables.
+
+Referential integrity ensures that relationships between tables remain valid and consistent.
+In simple terms:
+Every value in a foreign key column (in a fact table) must exist as a corresponding primary key in its related dimension table.
 --------------------------------------------------------------------------------------------------------------------------------
 STEP 2: Data Cleaning
 In Power Query (Transform Data):
