@@ -1,20 +1,13 @@
 POWER BI – Complete Detailed Guide (Zero to Advanced)
 🧭 1. What is Power BI?
-
 Power BI is a business intelligence (BI) tool by Microsoft used to:
-
 Connect to multiple data sources (Excel, SQL, APIs, cloud apps)
-
 Transform and clean data (Power Query)
-
 Build interactive reports & dashboards
-
 Share insights via Power BI Service (Cloud)
-
 👉 It helps companies make data-driven decisions using visual insights.
 
 🧱 2. Power BI Components
-
 Power BI has multiple tools — each plays a role in the data workflow.
 
 Component	Description	Used For
@@ -35,20 +28,15 @@ The standard workflow looks like this:
 🧩 4. Connecting Data Sources
 
 Power BI can connect to:
-
 Files → Excel, CSV, JSON, XML
-
 Databases → SQL Server, MySQL, Oracle, PostgreSQL
-
 Online → SharePoint, Google Analytics, Salesforce, Web APIs
-
 Cloud → Azure, AWS
 
 Example:
 Home → Get Data → SQL Server → enter server name → select database → load
 
 🧮 5. Power Query Editor (Data Cleaning Layer)
-
 The Power Query Editor is the engine behind data transformation.
 
 ✳️ Main Tasks:
@@ -61,33 +49,26 @@ Split/Combine Columns	Split by delimiter or merge
 Group By / Aggregate	Sum, Avg, Count by category
 Merge & Append Queries	Combine tables (like SQL joins)
 Custom Columns	Add columns using formulas
-
 💡 Every action adds a step in the Applied Steps pane — easy to audit later.
 
 🔗 6. Data Modeling
-
 Once data is cleaned, create relationships between tables.
-
 ✳️ Example:
-
 Orders table (OrderID, CustomerID, ProductID)
-
 Customers table (CustomerID, Name)
-
 Products table (ProductID, Category)
 
 Model view:
 Drag & connect CustomerID → CustomerID, ProductID → ProductID
-
 ⚙️ Relationship Types:
 Type	Description
 1:1	One-to-one (rare)
 1: (one-to-many)*	Most common
 :	Many-to-many (use bridge table)
+
 📐 7. DAX (Data Analysis Expressions)
 
 DAX = Power BI’s formula language, like Excel formulas on steroids.
-
 ✳️ Common DAX Categories
 Category	Examples
 Basic Aggregation	SUM(Sales[Amount]), AVERAGE(), COUNTROWS()
@@ -95,6 +76,7 @@ Conditional	IF(), SWITCH()
 Time Intelligence	TOTALYTD(), SAMEPERIODLASTYEAR()
 Filter Context	CALCULATE(SUM(Sales[Amount]), Sales[Region] = "East")
 Row Context	Used with iterators like SUMX, FILTER, RELATED
+
 ✳️ Example Measures:
 Total Sales = SUM(Sales[SalesAmount])
 Profit = SUM(Sales[SalesAmount]) - SUM(Sales[Cost])
@@ -102,9 +84,7 @@ Sales LY = CALCULATE(SUM(Sales[SalesAmount]), SAMEPERIODLASTYEAR(Date[Date]))
 Profit Margin = DIVIDE([Profit], [Total Sales])
 
 📊 8. Data Visualization (Report View)
-
 Use visuals to present insights.
-
 🧩 Types of Visuals:
 Visual	Use Case
 Bar/Column Chart	Compare categories
@@ -116,20 +96,15 @@ Map	Location-based data
 Funnel	Sales/lead stages
 Gauge	Target vs achievement
 Slicer	Filters for interactivity
+
 ✳️ Tips:
-
 Use consistent color themes
-
 Limit visuals per page (~6–8 max)
-
 Add navigation buttons & tooltips
-
 Add company logo & page titles
 
 ☁️ 9. Power BI Service (Cloud)
-
 Once your report is ready → Publish it to Power BI Service.
-
 ✳️ Features:
 Feature	Description
 Workspace	Place to organize reports/datasets
@@ -137,29 +112,19 @@ Dashboard	Pin visuals from multiple reports
 App	Bundle dashboards for sharing
 Schedule Refresh	Automatically update daily/hourly
 Row-Level Security (RLS)	Restrict data by user roles
-
 💡 Example: Managers see only their region’s data using RLS.
 
 ⚙️ 10. Power BI Gateway
-
 If your data is local (e.g., SQL Server on PC), you need Power BI Gateway to keep it refreshing in the cloud.
-
 Types:
-
 Personal Gateway: For individual users
-
 Enterprise Gateway: For shared servers
 
 📈 11. Real-Time Dashboards
-
 Power BI supports live dashboards using:
-
 Streaming Datasets
-
 Push APIs
-
 Power Automate + Power BI integration
-
 💡 Example: Live sales updates every 1 minute from a database or IoT feed.
 
 🔒 12. Security & Governance
@@ -167,38 +132,25 @@ Area	Description
 RLS (Row Level Security)	Filter by user roles
 Dataset Permissions	Control who can view/edit
 App Permissions	Share securely with teams
+
 ⚡ 13. Optimization Tips
-
 Limit visuals per report page
-
 Use numeric/date keys for joins
-
 Disable auto date/time (Modeling tab)
-
 Aggregate before importing (for large datasets)
-
 Use Measure Tables for organization
 
 📚 14. Real-Time Project Ideas
 
 1️⃣ Sales Dashboard:
-
 KPIs, Region Sales, Product Trend, Profit Margin
-
 2️⃣ HR Analytics:
-
 Employee attrition, attendance, gender diversity
-
 3️⃣ Finance Dashboard:
-
 P&L, revenue vs expense, year comparison
-
 4️⃣ Customer Churn:
-
 Retention, active vs inactive customers
-
 5️⃣ Social Media Analytics:
-
 Engagement by post type, impressions, followers trend
 
 🧠 15. Interview / Real-time Topics
@@ -209,6 +161,7 @@ DAX Filter Context	How CALCULATE changes filters
 Row Context	How SUMX works row by row
 Drillthrough / Bookmark	Page navigation techniques
 Power BI Service	Workspaces, Dashboards, Apps
+
 🧾 16. Learning Order (Practical Path)
 Stage	Focus
 1️⃣	Power BI Desktop basics
