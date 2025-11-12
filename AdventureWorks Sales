@@ -1,196 +1,199 @@
 STEP 1: Understand the Dataset
-Your Excel file has 7 key sheets (tables), typically:
+            Your Excel file has 7 key sheets (tables), typically:
+            
+            Sales_Data – Fact table (contains Sales Amount, Quantity, Order Date, ProductKey, etc.)
+            SalesOrder_Data – Order-level details (Order ID, CustomerKey, etc.)
+            Customer_Data – Customer demographics (name, gender, age, income, etc.)
+            Product_Data – Product details (category, subcategory, price, cost, etc.)
+            Reseller_Data – Reseller information (for B2B sales)
+            SalesTerritory_Data – Region, Country, and Territory info
+            Date_Data – Calendar table (date, month, quarter, year)
 
-Sales_Data – Fact table (contains Sales Amount, Quantity, Order Date, ProductKey, etc.)
-SalesOrder_Data – Order-level details (Order ID, CustomerKey, etc.)
-Customer_Data – Customer demographics (name, gender, age, income, etc.)
-Product_Data – Product details (category, subcategory, price, cost, etc.)
-Reseller_Data – Reseller information (for B2B sales)
-SalesTerritory_Data – Region, Country, and Territory info
-Date_Data – Calendar table (date, month, quarter, year)
+            A Fact table stores the measurable, quantitative data.
+            for example: sales, revenue, profit, quantity, discount, etc.
 
 🟩 Goal: Build a star schema → Sales_Data is the central fact table, all others are dimension tables.
 ------------------------------------------------------------------------------------------------------------------------------------
-In Customer_Data and Reseller_Data, the first row often has:
-
-| CustomerKey | CustomerName | ... |
-|--------------|---------------|
-| -1 | Not Applicable | ... |
-
-💡 Meaning:
--1 is a placeholder (dummy key) used when a sale record in the fact table (Sales_Data) doesn’t have a matching customer or reseller.
-Instead of leaving it blank or NULL, data engineers use -1 to maintain referential integrity between fact and dimension tables.
-
-Referential integrity ensures that relationships between tables remain valid and consistent.
-In simple terms:
-Every value in a foreign key column (in a fact table) must exist as a corresponding primary key in its related dimension table.
+            In Customer_Data and Reseller_Data, the first row often has:
+            
+            | CustomerKey | CustomerName | ... |
+            |--------------|---------------|
+            | -1 | Not Applicable | ... |
+            
+            💡 Meaning:
+            -1 is a placeholder (dummy key) used when a sale record in the fact table (Sales_Data) doesn’t have a matching customer or reseller.
+            Instead of leaving it blank or NULL, data engineers use -1 to maintain referential integrity between fact and dimension tables.
+            
+            Referential integrity ensures that relationships between tables remain valid and consistent.
+            In simple terms:
+            Every value in a foreign key column (in a fact table) must exist as a corresponding primary key in its related dimension table.
 --------------------------------------------------------------------------------------------------------------------------------
 STEP 2: Data Cleaning
-In Power Query (Transform Data):
-✅ Remove duplicates (especially in Customer or Product tables)
-✅ Ensure correct data types:
-Date columns → Date
-Price, Sales, Profit → Decimal Number
-Keys → Whole Number
-✅ Rename columns clearly (e.g., Product_Name, Customer_ID)
-✅ Handle nulls — replace with “Unknown” or 0 as needed
-✅ Ensure consistent date formats (e.g., M/d/yyyy)
-✅ Format currencies → USD (or your local currency)
+            In Power Query (Transform Data):
+            ✅ Remove duplicates (especially in Customer or Product tables)
+            ✅ Ensure correct data types:
+            Date columns → Date
+            Price, Sales, Profit → Decimal Number
+            Keys → Whole Number
+            ✅ Rename columns clearly (e.g., Product_Name, Customer_ID)
+            ✅ Handle nulls — replace with “Unknown” or 0 as needed
+            ✅ Ensure consistent date formats (e.g., M/d/yyyy)
+            ✅ Format currencies → USD (or your local currency)
 
 STEP 3: Data Modeling (Relationships)
-In Model view:
-
-Relationship	Type
-Sales_Data[CustomerKey] → Customer_Data[CustomerKey]	Many-to-One
-Sales_Data[ProductKey] → Product_Data[ProductKey]	Many-to-One
-Sales_Data[ResellerKey] → Reseller_Data[ResellerKey]	Many-to-One
-Sales_Data[SalesTerritoryKey] → SalesTerritory_Data[SalesTerritoryKey]	Many-to-One
-Sales_Data[OrderDateKey] → Date_Data[DateKey]	Many-to-One
+            In Model view:
+            
+            Relationship	Type
+            Sales_Data[CustomerKey] → Customer_Data[CustomerKey]	Many-to-One
+            Sales_Data[ProductKey] → Product_Data[ProductKey]	Many-to-One
+            Sales_Data[ResellerKey] → Reseller_Data[ResellerKey]	Many-to-One
+            Sales_Data[SalesTerritoryKey] → SalesTerritory_Data[SalesTerritoryKey]	Many-to-One
+            Sales_Data[OrderDateKey] → Date_Data[DateKey]	Many-to-One
 
 ➡️ Star Schema: One fact table (Sales) surrounded by lookup tables.
 
 STEP 4: DAX Measures
-Here are key DAX formulas to create:
-Measure	Formula
-| Measure                  | Formula                                                             |
-| ------------------------ | ------------------------------------------------------------------- |
-| **Total Sales**          | `SUM(Sales_Data[SalesAmount])`                                      |
-| **Total Orders**         | `DISTINCTCOUNT(Sales_Data[SalesOrderNumber])`                       |
-| **Total Quantity**       | `SUM(Sales_Data[OrderQuantity])`                                    |
-| **Total Profit**         | `SUMX(Sales_Data, Sales_Data[SalesAmount] - Sales_Data[TotalCost])` |
-| **Profit Margin %**      | `DIVIDE([Total Profit], [Total Sales])`                             |
-| **Average Order Value**  | `DIVIDE([Total Sales], [Total Orders])`                             |
-| **Sales LY (Last Year)** | `CALCULATE([Total Sales], SAMEPERIODLASTYEAR(Date_Data[FullDate]))` |
-| **YoY Growth %**         | `DIVIDE([Total Sales] - [Sales LY], [Sales LY])`                    |
+            Here are key DAX formulas to create:
+            Measure	Formula
+            | Measure                  | Formula                                                             |
+            | ------------------------ | ------------------------------------------------------------------- |
+            | **Total Sales**          | `SUM(Sales_Data[SalesAmount])`                                      |
+            | **Total Orders**         | `DISTINCTCOUNT(Sales_Data[SalesOrderNumber])`                       |
+            | **Total Quantity**       | `SUM(Sales_Data[OrderQuantity])`                                    |
+            | **Total Profit**         | `SUMX(Sales_Data, Sales_Data[SalesAmount] - Sales_Data[TotalCost])` |
+            | **Profit Margin %**      | `DIVIDE([Total Profit], [Total Sales])`                             |
+            | **Average Order Value**  | `DIVIDE([Total Sales], [Total Orders])`                             |
+            | **Sales LY (Last Year)** | `CALCULATE([Total Sales], SAMEPERIODLASTYEAR(Date_Data[FullDate]))` |
+            | **YoY Growth %**         | `DIVIDE([Total Sales] - [Sales LY], [Sales LY])`                    |
 
 -----------------------------------------------------------------------------------------------------------------------
 Dashboard Design
 Page 1: Sales Overview
-KPI Cards: Total Sales, Total Profit, Profit Margin, YoY Growth %
-Line Chart: Sales over Time (Date_Data)
-Map: Sales by Country/Region
-Column Chart: Sales by Product Category
-Donut Chart: Sales by Customer Segment
+            KPI Cards: Total Sales, Total Profit, Profit Margin, YoY Growth %
+            Line Chart: Sales over Time (Date_Data)
+            Map: Sales by Country/Region
+            Column Chart: Sales by Product Category
+            Donut Chart: Sales by Customer Segment
 
 Page 2: Product Insights
-Bar Chart: Top 10 Products by Sales
-Matrix: Category → Subcategory → Product (Sales, Profit)
-Scatter Plot: Profit vs. Quantity (colored by Category)
+            Bar Chart: Top 10 Products by Sales
+            Matrix: Category → Subcategory → Product (Sales, Profit)
+            Scatter Plot: Profit vs. Quantity (colored by Category)
 
 Page 3: Regional/Reseller Performance
-Map or Filled Map: Sales by Territory
-Clustered Column: Region vs. Total Sales
-Table: Reseller Name, Sales, Profit, Margin
+            Map or Filled Map: Sales by Territory
+            Clustered Column: Region vs. Total Sales
+            Table: Reseller Name, Sales, Profit, Margin
 
 Page 4: Customer Analysis
-Card: Total Customers
-Donut Chart: Sales by Gender or Occupation
-Line Chart: Customer Growth over Time
+            Card: Total Customers
+            Donut Chart: Sales by Gender or Occupation
+            Line Chart: Customer Growth over Time
 
 💡 STEP 6: Business Insights
-Once visuals are built, derive insights such as:
-🏆 Top-performing category – e.g., Bikes account for 45% of total revenue
-📉 Low-margin products – Accessories have 10% profit margin vs. 25% overall
-🌍 Regional differences – Europe sales growing faster than North America
-🕒 Seasonal trends – Sales spike during Q4 every year
-💰 High-value customers – Top 5% customers contribute 40% of revenue
+            Once visuals are built, derive insights such as:
+            🏆 Top-performing category – e.g., Bikes account for 45% of total revenue
+            📉 Low-margin products – Accessories have 10% profit margin vs. 25% overall
+            🌍 Regional differences – Europe sales growing faster than North America
+            🕒 Seasonal trends – Sales spike during Q4 every year
+            💰 High-value customers – Top 5% customers contribute 40% of revenue
 
 
 Task 1: Data Model Preparation
 ------------------------------------------
-Import all 7 sheets into Power BI (or Excel Power Pivot).
-Create relationships:
-Sales_data[SalesOrderLineKey] → Sales Order_data[SalesOrderLineKey]
-Sales_data[SalesTerritoryKey] → Sales Territory_data[SalesTerritoryKey]
-Sales_data[ResellerKey] → Reseller_data[ResellerKey]
-Sales_data[CustomerKey] → Customer_data[CustomerKey]
-Sales_data[ProductKey] → Product_data[ProductKey]
-Sales_data[OrderDateKey] → Date_data[DateKey]
-
-Ensure one-to-many relationships (dimension → fact).
-📌 Outcome: A star schema model ready for dashboarding.
+            Import all 7 sheets into Power BI (or Excel Power Pivot).
+            Create relationships:
+            Sales_data[SalesOrderLineKey] → Sales Order_data[SalesOrderLineKey]
+            Sales_data[SalesTerritoryKey] → Sales Territory_data[SalesTerritoryKey]
+            Sales_data[ResellerKey] → Reseller_data[ResellerKey]
+            Sales_data[CustomerKey] → Customer_data[CustomerKey]
+            Sales_data[ProductKey] → Product_data[ProductKey]
+            Sales_data[OrderDateKey] → Date_data[DateKey]
+            
+            Ensure one-to-many relationships (dimension → fact).
+            📌 Outcome: A star schema model ready for dashboarding.
 
 Task 2: Sales Overview Dashboard
 -------------------------------------------
-Objective: Show company-wide sales performance.
-Steps:
-Add a Card Visual → Sales_data[Sales Amount] → Total Sales.
-Add a Card Visual → Sales_data[Order Quantity] → Total Orders.
-
-Add a Line Chart:
-Axis → Date_data[Full Date]
-Values → Sales_data[Sales Amount]
-
-This shows daily/monthly sales trend.
-
-Add a Slicer → Date_data[Year] and Date_data[Month] to filter.
-📌 Outcome: Management can track overall performance and time trends.
+            Objective: Show company-wide sales performance.
+            Steps:
+            Add a Card Visual → Sales_data[Sales Amount] → Total Sales.
+            Add a Card Visual → Sales_data[Order Quantity] → Total Orders.
+            
+            Add a Line Chart:
+            Axis → Date_data[Full Date]
+            Values → Sales_data[Sales Amount]
+            
+            This shows daily/monthly sales trend.
+            
+            Add a Slicer → Date_data[Year] and Date_data[Month] to filter.
+            📌 Outcome: Management can track overall performance and time trends.
 
 Task 3: Product Performance Dashboard
 ----------------------------------------------
-Objective: Identify best-selling products.
-Steps:
-Add a Clustered Bar Chart:
-
-Axis → Product_data[Category]
-Values → Sales_data[Sales Amount]
-
-Add a Matrix Table:
-Rows → Product_data[Subcategory]
-Columns → Product_data[Product]
-Values → Sales_data[Sales Amount], Sales_data[Order Quantity]
-
-Add a Pie Chart → Sales by Product_data[Color].
-
-📌 Outcome: Clear view of top products and categories driving revenue.
+              Objective: Identify best-selling products.
+              Steps:
+              Add a Clustered Bar Chart:
+              
+              Axis → Product_data[Category]
+              Values → Sales_data[Sales Amount]
+              
+              Add a Matrix Table:
+              Rows → Product_data[Subcategory]
+              Columns → Product_data[Product]
+              Values → Sales_data[Sales Amount], Sales_data[Order Quantity]
+              
+              Add a Pie Chart → Sales by Product_data[Color].
+              
+              📌 Outcome: Clear view of top products and categories driving revenue.
 
 Task 4: Regional & Reseller Dashboard
 ---------------------------------------------------------
-Objective: See how sales vary across territories and partners.
-Steps:
-Add a Map Visual:
-
-Location → Sales Territory_data[Country]
-Size → Sales_data[Sales Amount]
-
-Add a Clustered Column Chart:
-Axis → Sales Territory_data[Region]
-Values → Sales_data[Sales Amount]
-
-Add a Table:
-Rows → Reseller_data[Reseller]
-Values → Sales_data[Sales Amount], Sales_data[Order Quantity]
-Sort descending by Sales Amount.
-
-📌 Outcome: Easy tracking of which regions and resellers are strong or weak.
+              Objective: See how sales vary across territories and partners.
+              Steps:
+              Add a Map Visual:
+              
+              Location → Sales Territory_data[Country]
+              Size → Sales_data[Sales Amount]
+              
+              Add a Clustered Column Chart:
+              Axis → Sales Territory_data[Region]
+              Values → Sales_data[Sales Amount]
+              
+              Add a Table:
+              Rows → Reseller_data[Reseller]
+              Values → Sales_data[Sales Amount], Sales_data[Order Quantity]
+              Sort descending by Sales Amount.
+              
+              📌 Outcome: Easy tracking of which regions and resellers are strong or weak.
 
 Task 5: Customer Insights Dashboard
 ---------------------------------------------
-Objective: Focus on customer behavior.
-Steps:
-Add a Table:
-Rows → Customer_data[Customer]
-Values → Sales_data[Sales Amount]
-Sort by Sales Amount (Top Customers).
-
-Add a Donut Chart:
-Legend → Customer_data[Country-Region]
-Values → Sales_data[Sales Amount]
-
-Add a Card → Distinct Count of Customer_data[CustomerKey].
-
-📌 Outcome: Helps understand top customers and geographic spread.
+              Objective: Focus on customer behavior.
+              Steps:
+              Add a Table:
+              Rows → Customer_data[Customer]
+              Values → Sales_data[Sales Amount]
+              Sort by Sales Amount (Top Customers).
+              
+              Add a Donut Chart:
+              Legend → Customer_data[Country-Region]
+              Values → Sales_data[Sales Amount]
+              
+              Add a Card → Distinct Count of Customer_data[CustomerKey].
+              
+              📌 Outcome: Helps understand top customers and geographic spread.
 
 Task 6: Interactive Filtering
 ----------------------------------------------
-Add Slicers for:
-Year / Quarter (Date_data)
-Product Category (Product_data)
-Region (Sales Territory_data)
-Reseller (Reseller_data)
-
-This allows managers to slice dashboards quickly.
-📌 Outcome: Fully interactive dashboard for analysis.
+              Add Slicers for:
+              Year / Quarter (Date_data)
+              Product Category (Product_data)
+              Region (Sales Territory_data)
+              Reseller (Reseller_data)
+              
+              This allows managers to slice dashboards quickly.
+              📌 Outcome: Fully interactive dashboard for analysis.
 
 ----------------------------------------------------------------------------------------------------------------------------------------
 Dashboard Design
