@@ -4,7 +4,7 @@ across healthcare, insurance, and finance domains. My work mainly focuses on dat
 analyzing large datasets, and building dashboards that support decision-making.
 
 In my recent healthcare project, I worked with patient records, claims data, and operational KPIs. 
-I used SQL to optimize data extraction from large databases, which improved the performance and efficiency of reporting workflows. 
+I used SQL to optimize data extraction from large databases, which improved the performance of reporting workflows. 
 I designed interactive Power BI dashboards using DAX, Power Query, and Row-Level Security, and published them to the Power BI Service with scheduled refreshes.
 These dashboards helped track key metrics like patient admissions, claim turnaround time, and provider performance.
 
